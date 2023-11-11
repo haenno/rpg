@@ -31,7 +31,7 @@ services:
       - .:/code
       - ./:/usr/src/rpg      
     depends_on:
-      - rpgdbdb
+      - rpgdb
     ports:
       - 8642:8642
     labels:
