@@ -24,7 +24,7 @@ services:
     hostname: rpgapp
     restart: always
     build:
-      context: /home/rjhadmin/tstsrv/rpg
+      context: ./rpg
       dockerfile: Dockerfile
     command: bash -c '/srv/rpg/start_rpg_prod.sh'
     volumes:
