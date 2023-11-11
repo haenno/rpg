@@ -1,4 +1,10 @@
-version: "3.8"
+version: "3.7"
+
+x-logging: &loki-logging
+  driver: json-file
+  options:
+    tag: "{{.ImageName}}|{{.Name}}|{{.ImageFullID}}|{{.FullID}}"
+
 services:
 
   rpgdb:
@@ -20,15 +26,29 @@ services:
     build:
       context: /home/rjhadmin/tstsrv/rpg
       dockerfile: Dockerfile
-    command: python rpg/manage.py runserver 0.0.0.0:8200
+    command: bash -c '/srv/rpg/start_rpg_prod.sh'
     volumes:
       - .:/code
+      - ./:/usr/src/rpg      
     depends_on:
       - rpgdbdb
     ports:
-      - 8200:8200
+      - 8642:8642
     labels:
-      - traefik.http.routers.rpg.rule=Host(`rpg.${DOMAIN}`)
+      - traefik.http.routers.rpg.rule=Host(`rpg.${ENV_RPG_DOCKER_DOMAIN}`)
+      - traefik.http.routers.rpg.service=rpg
+      # - traefik.http.routers.rpg.middlewares=auth
+      - traefik.http.services.rpg.loadbalancer.server.port=8642
       - traefik.http.routers.rpg.entrypoints=https
       - traefik.http.routers.rpg.tls=true
-      - traefik.http.routers.rpg.tls.certresolver=${CERT_RESOLVER}
+      - traefik.http.routers.rpg.tls.certresolver=${ENV_RPG_DOCKER_CERT_RESOLVER}
+    networks:
+      - internalnetwork
+    restart: always
+    logging: *loki-logging
+
+networks:
+  internalnetwork:
+    name: internalnetwork
+    external: true
+
