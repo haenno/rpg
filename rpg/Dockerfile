@@ -10,5 +10,5 @@ COPY . .
 ARG DJANGO_SUPERUSER_EMAIL
 ARG DJANGO_SUPERUSER_PASSWORD
 ARG DJANGO_SUPERUSER_USERNAME
-RUN chmod +x start_drfjwt.sh
+RUN chmod +x start_rpg_prod.sh
 CMD ["sh", "start_rpg_prod.sh"]
