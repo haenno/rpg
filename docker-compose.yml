@@ -26,6 +26,12 @@ services:
     build:
       context: ./rpg
       dockerfile: Dockerfile
+      args:
+        DJANGO_SUPERUSER_PASSWORD: ${ENV_DRFJWT_DJANGO_SUPERUSER_PASSWORD}
+        DJANGO_SUPERUSER_USERNAME: ${ENV_DRFJWT_DJANGO_SUPERUSER_USERNAME}
+        DJANGO_SUPERUSER_EMAIL: ${ENV_DRFJWT_DJANGO_SUPERUSER_EMAIL}
+    env_file:
+      - ./rpg/env      
     command: bash -c '/srv/rpg/start_rpg_prod.sh'
     volumes:
       - .:/code
